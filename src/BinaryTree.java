@@ -9,48 +9,65 @@ public class BinaryTree<T extends Comparable<T>> {
         this.root = root;
     }
 
+    // iterative
     public void insert(T data) {
-        if (root == null) {
-            root = new Node<T>(data);
+        Node<T> tempNode = this.root;
+        Node<T> father = null;
+
+        if (tempNode == null) {
+            this.root = new Node<>(data);
             return;
         }
 
-
-        if (data.compareTo(root.getData()) > 0) {
-            root.right = new Node<>(data);
-        } else {
-            root.left = new Node<>(data);
+        while (tempNode != null) {
+            father = tempNode;
+            if (data.compareTo(tempNode.getData()) <= 0) { tempNode = tempNode.left; }
+            else if (data.compareTo(tempNode.getData()) > 0) { tempNode = tempNode.right; }
         }
+
+        if (data.compareTo(father.getData()) <= 0) { father.left = new Node<>(data); }
+        if (data.compareTo(father.getData()) > 0) { father.right = new Node<>(data); }
     }
 
+    // insert recursive
     public void insertRec(T value) {
-        Node<T> tempNode = root;
-        insertRec(value, tempNode);
+        root = insertRec(value, this.root);
     }
 
-    private void insertRec(T value, Node<T> tNode) {
-        if (tNode == null) {
-            tNode = new Node<>(value);
-            return;
+    private Node<T> insertRec(T value, Node<T> node) {
+        if (node == null) {
+            node = new Node<>(value);
+            return node;
         }
-        if (value.compareTo(tNode.getData()) > 0) {
-            tNode = tNode.left;
-            insertRec(value, tNode);
+        if (value.compareTo(node.getData()) < 0) {
+            node.left = insertRec(value, node.left);
         } else {
-            tNode = tNode.right;
-            insertRec(value, tNode);
+            node.right = insertRec(value, node.right);
         }
+        return node;
     }
 
-    public T search(T data) {
-        Node<T> tempNode = root;
-        if (data.compareTo(root.getData()) > 0) {
-            tempNode = tempNode.left;
-        } else if (data.compareTo(root.getData()) < 0) {
-            tempNode = tempNode.right;
-        } else if (data.compareTo(root.getData()) == 0) {
-            return  tempNode.getData();
+    // binary search O(log n)
+    // iterative
+    public Node<T> search(T data) {
+        Node<T> tempNode = this.root;
+        while (tempNode != null) {
+            if (data.compareTo(tempNode.getData()) == 0) { return tempNode; }
+            if (data.compareTo(tempNode.getData()) < 0) { tempNode = tempNode.left; }
+            if (data.compareTo(tempNode.getData()) > 0) { tempNode = tempNode.right; }
         }
+        return null;
+    }
+
+    // rekursive
+    public Node<T> searchRec(T data) {
+        return searchRec(data, this.root);
+    }
+
+    private Node<T> searchRec(T data, Node<T> node) {
+        if (node == null || node.getData() == data) { return node; }
+        if (data.compareTo(node.getData()) < 0) { return searchRec(data, node.left); }
+        if (data.compareTo(node.getData()) > 0) { return searchRec(data, node.right); }
         return null;
     }
 
@@ -62,8 +79,22 @@ public class BinaryTree<T extends Comparable<T>> {
         // todo
     }
 
+    // iterative
     public void inorder() {
         // todo
+    }
+
+    // rekursive
+    public void inorderRec() {
+        inorderRec(root);
+    }
+
+    private void inorderRec(Node<T> node) {
+        if (root != null) {
+            inorderRec(node.left);
+            System.out.println(node.getData());
+            inorderRec(root.right);
+        }
     }
 
     public void TreeToVine() {
