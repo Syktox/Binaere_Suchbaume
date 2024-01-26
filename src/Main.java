@@ -6,14 +6,15 @@ public class Main {
         binaryTree.insert(14);
         binaryTree.insert(2);
         binaryTree.insert(5);
+        binaryTree.insert(18);
         binaryTree.insert(19);
         binaryTree.insert(88);
 
 
+
         try {
-            System.out.println(binaryTree.root.getData());
-            System.out.println(binaryTree.root.right.getData());
-            System.out.println(binaryTree.root.left.right.getData());
+            System.out.println("postorder: \n");
+            binaryTree.postorder();
         } catch (NullPointerException e) {
             System.out.println(e.getMessage());
         }

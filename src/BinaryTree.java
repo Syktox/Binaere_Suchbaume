@@ -1,3 +1,5 @@
+import java.util.Stack;
+
 public class BinaryTree<T extends Comparable<T>> {
     Node<T> root;
 
@@ -72,29 +74,100 @@ public class BinaryTree<T extends Comparable<T>> {
     }
 
     public void postorder() {
-        // todo
+        System.out.println("Can't programm this");
+    }
+
+    // rekursive
+    public void postorderRec() {
+        postorderRec(this.root);
+    }
+
+    private void postorderRec(Node<T> node) {
+        if (node != null) {
+            postorderRec(node.left);
+            postorderRec(node.right);
+            System.out.println(node.getData());
+        }
     }
 
     public void preorder() {
-        // todo
+        if (this.root == null) {
+            return;
+        }
+        Stack<Node<T>> stack = new Stack<>();
+        Node<T> tempNode = this.root;
+
+        while (!stack.isEmpty() || tempNode != null) {
+            if (tempNode != null) {
+                System.out.println(tempNode.getData());
+                stack.push(tempNode);
+                tempNode = tempNode.left;
+            } else {
+                Node<T> prevNode = stack.pop();
+                tempNode = prevNode.right;
+            }
+        }
+    }
+
+    // rekursive
+
+    public void preorderRec() {
+        preorderRec(this.root);
+    }
+
+    private void preorderRec(Node<T> node) {
+        if (node != null) {
+            System.out.println(node.getData());
+            preorderRec(node.left);
+            preorderRec(node.right);
+        }
     }
 
     // iterative
     public void inorder() {
-        // todo
+        if (this.root == null) {
+            return;
+        }
+        Stack<Node<T>> stack = new Stack<>();
+        Node<T> tempNode = this.root;
+
+        while (tempNode != null || !stack.isEmpty()) {
+            while (tempNode != null) {
+                stack.push(tempNode);
+                tempNode = tempNode.left;
+            }
+            tempNode = stack.pop();
+            System.out.println(tempNode.getData());
+            tempNode = tempNode.right;
+        }
     }
 
     // rekursive
     public void inorderRec() {
-        inorderRec(root);
+        inorderRec(this.root);
     }
 
     private void inorderRec(Node<T> node) {
-        if (root != null) {
+        if (node != null) {
             inorderRec(node.left);
             System.out.println(node.getData());
-            inorderRec(root.right);
+            inorderRec(node.right);
         }
+    }
+
+    public Node<T> delete(T value) {
+        if (value.compareTo(this.root.getData()) == 0) {
+            Node<T> tempNode = this.root;
+            Node<T> newNode = new Node(value);
+            if (tempNode.right.left == null) {
+                newNode.right = tempNode.right;
+                newNode.left = root.left;
+                this.root = null;
+                this.root = newNode;
+            }
+        }
+        // todo
+        return null;
     }
 
     public void TreeToVine() {
