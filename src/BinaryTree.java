@@ -110,7 +110,6 @@ public class BinaryTree<T extends Comparable<T>> {
     }
 
     // rekursive
-
     public void preorderRec() {
         preorderRec(this.root);
     }
@@ -155,20 +154,44 @@ public class BinaryTree<T extends Comparable<T>> {
         }
     }
 
-    public Node<T> delete(T value) {
+    public void delete(T value) {
         if (value.compareTo(this.root.getData()) == 0) {
-            Node<T> tempNode = this.root;
-            Node<T> newNode = new Node(value);
-            if (tempNode.right.left == null) {
-                newNode.right = tempNode.right;
-                newNode.left = root.left;
+            if (this.root.right.left == null) {
+                Node<T> newRootNode = this.root.right;
+                newRootNode.left = this.root.left;
                 this.root = null;
-                this.root = newNode;
+                this.root = newRootNode;
+            } else {
+                Node<T> newRootNode = this.root.right;
+                Node<T> fatherNode = null;
+                while (newRootNode.left != null) {
+                    fatherNode = newRootNode;
+                    newRootNode = newRootNode.left;
+                }
+                newRootNode.left = this.root.left;
+                newRootNode.right = this.root.right;
+                this.root = null;       // Speicherleiche verhinder ? ! 
+                this.root = newRootNode;
+                fatherNode.left = null;
             }
         }
-        // todo
-        return null;
-    }
+        Node<T> tempNode = this.root;
+        Node<T> fatherNode = null;
+        
+        while (tempNode != null && tempNode.getData() != value) {
+            fatherNode = tempNode;
+            if (value.compareTo(tempNode.getData()) < 0) { tempNode = tempNode.left; }
+            if (value.compareTo(tempNode.getData()) > 0) { tempNode = tempNode.right; }
+        }
+
+        if (tempNode == null) { return; }
+        if (tempNode.left == null && tempNode.right == null) { 
+            if (fatherNode.left.equals(tempNode)) { fatherNode.left = null; }
+            if (fatherNode.right.equals(tempNode)) { fatherNode.right = null; }
+            tempNode = null; 
+        }
+
+    }   
 
     public void TreeToVine() {
         // todo
