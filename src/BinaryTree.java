@@ -155,47 +155,37 @@ public class BinaryTree<T extends Comparable<T>> {
     }
 
     public void delete(T value) {
-        if (value.compareTo(this.root.getData()) == 0) {
-            if (this.root.right == null) {
-                Node<T> tempNode = this.root;
-                this.root = root.left;
-                tempNode.left = null;
-                tempNode = null;
-            } else if (this.root.right.left == null) {
-                Node<T> newRootNode = this.root.right;
-                newRootNode.left = this.root.left;
-                this.root = null;
-                this.root = newRootNode;
-            } else {
-                Node<T> newRootNode = this.root.right;
-                Node<T> fatherNode = null;
-                while (newRootNode.left != null) {
-                    fatherNode = newRootNode;
-                    newRootNode = newRootNode.left;
-                }
-                newRootNode.left = this.root.left;
-                newRootNode.right = this.root.right;
-                this.root = null;       // Speicherleiche verhinder ? ! 
-                this.root = newRootNode;
-                fatherNode.left = null;
-            }
-        }
+        Node<T> father = null;
         Node<T> tempNode = this.root;
-        Node<T> fatherNode = null;
-        
-        while (tempNode != null && tempNode.getData() != value) {
-            fatherNode = tempNode;
-            if (value.compareTo(tempNode.getData()) < 0) { tempNode = tempNode.left; }
-            if (value.compareTo(tempNode.getData()) > 0) { tempNode = tempNode.right; }
+
+        while (tempNode != null && value.compareTo(tempNode.getData()) == 0) {
+            father = tempNode;
+            if (value.compareTo(tempNode.getData()) < 0) tempNode = tempNode.left;
+            else tempNode = tempNode.right;
         }
 
-        if (tempNode == null) { return; }
-        if (tempNode.left == null && tempNode.right == null) { 
-            if (fatherNode.left.equals(tempNode)) { fatherNode.left = null; }
-            if (fatherNode.right.equals(tempNode)) { fatherNode.right = null; }
-            tempNode = null; 
+        if (tempNode != null) {
+            Node<T> newNode = null;
+            if (tempNode.right == null) newNode = tempNode.left;
+            else if (tempNode.left == null) {   newNode = tempNode.right;
+                                                newNode.left = tempNode.left;   }
+            else {  
+                Node<T> newNodefather = tempNode.right;
+                tempNode = newNodefather.left;
+                while (tempNode.left != null) {
+                    newNodefather = newNode;
+                    newNode = newNode.left;
+                }
+                newNodefather.left = newNode.right;
+                newNode.left = tempNode.left;
+                newNode.right = tempNode.right;
+            }
+            if (tempNode == this.root) this.root = newNode;
+            else if (value.compareTo(father.getData()) < 0) father.left = newNode;
+            else father.right = newNode;
+            tempNode.left = null;
+            tempNode.right = null;
         }
-
     }   
 
     public void TreeToVine() {

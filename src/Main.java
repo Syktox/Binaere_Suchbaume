@@ -15,13 +15,7 @@ public class Main {
         binaryTree.insert(48);
 
         try {
-            System.out.println("postorder: \n");
-            System.out.println("before deleting");
-            binaryTree.preorder();
-            System.out.println("\n\nafter deleting");
-            binaryTree.delete(50); 
-            binaryTree.preorder();
-
+            binaryTree.delete(13); 
         } catch (NullPointerException e) {
             System.out.println(e.getMessage());
         }
