@@ -156,7 +156,12 @@ public class BinaryTree<T extends Comparable<T>> {
 
     public void delete(T value) {
         if (value.compareTo(this.root.getData()) == 0) {
-            if (this.root.right.left == null) {
+            if (this.root.right == null) {
+                Node<T> tempNode = this.root;
+                this.root = root.left;
+                tempNode.left = null;
+                tempNode = null;
+            } else if (this.root.right.left == null) {
                 Node<T> newRootNode = this.root.right;
                 newRootNode.left = this.root.left;
                 this.root = null;
