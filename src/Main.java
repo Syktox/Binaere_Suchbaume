@@ -15,8 +15,7 @@ public class Main {
         binaryTree.insert(48);
 
         try {
-            int vinelength = binaryTree.TreeToVine();
-            binaryTree.VineToTree(vinelength);
+            binaryTree.delete(20);
         } catch (NullPointerException e) {
             System.out.println(e.getMessage());
         }

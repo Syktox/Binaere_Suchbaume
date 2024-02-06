@@ -158,7 +158,7 @@ public class BinaryTree<T extends Comparable<T>> {
         Node<T> father = null;
         Node<T> tempNode = this.root;
 
-        while (tempNode != null && value.compareTo(tempNode.getData()) == 0) {
+        while (tempNode != null && value.compareTo(tempNode.getData()) != 0) {
             father = tempNode;
             if (value.compareTo(tempNode.getData()) < 0) tempNode = tempNode.left;
             else tempNode = tempNode.right;
