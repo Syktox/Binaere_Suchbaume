@@ -273,7 +273,19 @@ public class BinaryTree<T extends Comparable<T>> {
     public int TreeToVine() {   // geht nicht
         Node<T> tail = this.root;
         Node<T> rest = tail.right;
+        Node<T> temp = this.root;
         int count = 0;
+        
+        if (temp.right.left == null) {
+            temp.right.left = tail.left;
+        } else {
+            temp = temp.right;
+            while (temp.left != null) {
+                temp = temp.left;
+            }
+            temp.left = tail.left;
+            tail.left = null;
+        }
 
         while (rest != null) {
             if (rest.left == null) {
