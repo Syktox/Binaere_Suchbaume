@@ -272,6 +272,7 @@ public class BinaryTree<T extends Comparable<T>> {
 
     public int TreeToVine() {   
         if (this.root == null) return -1;
+        if (this.root.left == null && this.root.right == null) return 1;
         if (this.root.right == null) {
             this.root.right = this.root.left; 
             this.root.left = null;

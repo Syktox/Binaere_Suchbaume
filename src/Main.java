@@ -7,6 +7,14 @@ public class Main {
         binaryTree.insert(7);
         binaryTree.insert(6);
 
+        binaryTree.insert(50);
+        binaryTree.insert(20);
+        binaryTree.insert(80);
+        binaryTree.insert(100);
+        binaryTree.insert(90);
+        binaryTree.insert(70);
+        binaryTree.insert(60);
+        binaryTree.insert(75);
 
         try {
             int length = binaryTree.TreeToVine();
