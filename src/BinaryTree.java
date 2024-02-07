@@ -154,22 +154,29 @@ public class BinaryTree<T extends Comparable<T>> {
         }
     }
 
-    public void delete(T value) {            // geht nicht
+    public void delete(T value) {
         Node<T> tempNode = this.root;
         Node<T> father = null;
 
         while (tempNode != null && value.compareTo(tempNode.getData()) != 0) {
             father = tempNode;
-            if (value.compareTo(tempNode.getData()) < 0) tempNode = tempNode.left;
-            else tempNode = tempNode.right;
+            if (value.compareTo(tempNode.getData()) < 0) { tempNode = tempNode.left; }
+            if (value.compareTo(tempNode.getData()) > 0) { tempNode = tempNode.right; }
         }
 
-        checkRootNodeDeletion(tempNode);
-        checkLeafeNodeDeletion(tempNode, father);
-        checkMiddleNodeDeletion();
+        if (checkRootNode(tempNode)) deleteRootNode();
+        if (checkLeafeNode(tempNode)) deleteLeafeNode(tempNode, father);
+        if (checkMiddleNode(tempNode, father)) deleteMiddleNode(tempNode, father);
     }   
 
-    private void checkRootNodeDeletion(Node<T> tempNode) {
+    private boolean checkRootNode(Node<T> node) {
+        return (this.root != null && node.getData().compareTo(this.root.getData()) == 0);
+    }
+
+    private void deleteRootNode() {
+        Node<T> tempNode = this.root;
+        Node<T> father = null;
+
         if (tempNode == null) return;
         if (tempNode != this.root) return;
         if (tempNode.right == null) {
@@ -189,23 +196,77 @@ public class BinaryTree<T extends Comparable<T>> {
         }
         tempNode = tempNode.right;
         while (tempNode.left != null) {
+            father = tempNode;
             tempNode = tempNode.left;
         }
         tempNode.left = this.root.left;
         tempNode.right = this.root.right;
+        father.left = null;
         this.root.left = null;
         this.root.right = null;
         this.root = null;
         this.root = tempNode;
     }
 
-    private void checkLeafeNodeDeletion(Node<T> tempNode, Node<T> father) {
-
-
+    private boolean checkLeafeNode(Node<T> node) {
+        return (node.left == null && node.right == null);
     }
 
-    private void checkMiddleNodeDeletion() {
+    private void deleteLeafeNode(Node<T> tempNode, Node<T> father) {
+        if (father.right.equals(tempNode)) father.right = null;
+        if (father.left.equals(tempNode)) father.left = null;
+        tempNode = null;
+    }
 
+    private boolean checkMiddleNode(Node<T> node, Node<T> father) {
+        if (father == null) return false;
+        if (node.left == null && node.right == null) return false;
+        return true;
+    }
+
+    private void deleteMiddleNode(Node<T> tempNode, Node<T> father) {
+        if (tempNode.right == null) {
+            if (tempNode.equals(father.left)) father.left = tempNode.left;
+            if (tempNode.equals(father.right)) father.right = tempNode.left;
+            tempNode.left = null;
+            tempNode = null;
+        } 
+        else if (tempNode.left == null) {
+            if (tempNode.equals(father.left)) father.left = tempNode.right;
+            if (tempNode.equals(father.right)) father.right = tempNode.right;
+            tempNode.right = null;
+            tempNode = null;
+        } 
+        else {
+            if (tempNode.right.left == null) {
+                Node<T> fof = father;
+                father = tempNode;
+                tempNode = tempNode.right;
+                
+                if (father.equals(fof.right)) fof.right = tempNode;
+                if (father.equals(fof.left)) fof.left = tempNode;
+                tempNode.left = father.left;
+                father.left = null;
+                father.right = null;
+                father = null;              
+                return;
+            }
+            Node<T> fof = father;
+            Node<T> nodeToDelete = tempNode;
+            tempNode = tempNode.right;
+            while (tempNode.left != null) {
+                father = tempNode;
+                tempNode = tempNode.left;
+            }
+            tempNode.left = nodeToDelete.left;
+            tempNode.right = nodeToDelete.right;
+            if (nodeToDelete.equals(fof.right)) fof.right = tempNode;
+            if (nodeToDelete.equals(fof.left)) fof.left = tempNode;
+            nodeToDelete.left = null;
+            nodeToDelete.right = null;
+            nodeToDelete = null;
+            father.left = null;
+        }
     }
 
 
