@@ -1,7 +1,7 @@
 import java.util.Stack;
 
 public class BinaryTree<T extends Comparable<T>> {
-    Node<T> root;
+    private Node<T> root;
 
     BinaryTree() {
         this.root = null;
@@ -272,7 +272,7 @@ public class BinaryTree<T extends Comparable<T>> {
 
     public int TreeToVine() {   // geht nicht
         Node<T> tail = this.root;
-        Node<T> rest = this.root;
+        Node<T> rest = tail.right;
         int count = 0;
 
         while (rest != null) {
@@ -291,14 +291,25 @@ public class BinaryTree<T extends Comparable<T>> {
         return count;
     }
 
-    public void VineToTree(int length) {         // geht nicht
+    public void compress(int length) {
         Node<T> tempNode = this.root;
-        for (int i = 1; i <= length; i++) {
+        for (int i = 0; i <= length; i++) {
             Node<T> son = tempNode.right;
             tempNode.right = son.right;
             son.right = tempNode.right.left;
             tempNode.right.left = son;
             tempNode = tempNode.right;
+        }
+    }
+
+    public void VineToTree(int length) {
+        int k = 1;
+        while (k <= length + 1) k = k + k;
+        int i = k / 2 - 1;
+        compress(length - 1);
+        while (i < 1) {
+            i = i / 2;
+            compress(i);
         }
     }
 
