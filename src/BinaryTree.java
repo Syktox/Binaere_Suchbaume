@@ -270,14 +270,20 @@ public class BinaryTree<T extends Comparable<T>> {
     }
 
 
-    public int TreeToVine() {   // geht nicht
+    public int TreeToVine() {   
+        if (this.root == null) return -1;
+        if (this.root.right == null) {
+            this.root.right = this.root.left; 
+            this.root.left = null;
+        }
         Node<T> tail = this.root;
         Node<T> rest = tail.right;
         Node<T> temp = this.root;
         int count = 0;
-        
+
         if (temp.right.left == null) {
             temp.right.left = tail.left;
+            this.root.left = null;
         } else {
             temp = temp.right;
             while (temp.left != null) {
@@ -300,6 +306,24 @@ public class BinaryTree<T extends Comparable<T>> {
                 tail.right = tempNode;
             }
         }
+
+        Node<T> changeNode = this.root;
+        this.root = this.root.right;
+        Node<T> iterate = this.root;
+        Node<T> iteratefather = null;
+        while (changeNode.getData().compareTo(iterate.getData()) > 0) {
+            iteratefather = iterate;
+            iterate = iterate.right;
+            if (iterate.right == null) {
+                iterate.right = changeNode;
+                changeNode.right = null;
+                changeNode.left = null;
+                return count;
+            } 
+        }
+        iteratefather.right = changeNode;
+        changeNode.right = null;
+        changeNode.right = iterate;
         return count;
     }
 
