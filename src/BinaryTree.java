@@ -155,8 +155,8 @@ public class BinaryTree<T extends Comparable<T>> {
     }
 
     public void delete(T value) {            // geht nicht
-        Node<T> father = null;
         Node<T> tempNode = this.root;
+        Node<T> father = null;
 
         while (tempNode != null && value.compareTo(tempNode.getData()) != 0) {
             father = tempNode;
@@ -164,29 +164,50 @@ public class BinaryTree<T extends Comparable<T>> {
             else tempNode = tempNode.right;
         }
 
-        if (tempNode != null) {        
-            Node<T> newNode = null;
-            if (tempNode.right == null) newNode = tempNode.left;
-            else if (tempNode.left == null) {   newNode = tempNode.right;
-                                                newNode.left = tempNode.left;   }
-            else {  
-                Node<T> newNodefather = tempNode.right;
-                tempNode = newNodefather.left;
-                while (tempNode.left != null) {
-                    newNodefather = newNode;
-                    newNode = newNode.left;
-                }
-                newNodefather.left = newNode.right;
-                newNode.left = tempNode.left;
-                newNode.right = tempNode.right;
-            }
-            if (tempNode == this.root) this.root = newNode;
-            else if (value.compareTo(father.getData()) < 0) father.left = newNode;
-            else father.right = newNode;
-            tempNode.left = null;
-            tempNode.right = null;
-        }
+        checkRootNodeDeletion(tempNode);
+        checkLeafeNodeDeletion(tempNode, father);
+        checkMiddleNodeDeletion();
     }   
+
+    private void checkRootNodeDeletion(Node<T> tempNode) {
+        if (tempNode == null) return;
+        if (tempNode != this.root) return;
+        if (tempNode.right == null) {
+            this.root = root.left;
+            tempNode.left = null;
+            tempNode = null;
+            return;
+        }
+        if (tempNode.right.left == null) {
+            tempNode = tempNode.right;
+            tempNode.left = this.root.left;
+            this.root.right = null;
+            this.root.left = null;
+            this.root = null;
+            this.root = tempNode;
+            return;
+        }
+        tempNode = tempNode.right;
+        while (tempNode.left != null) {
+            tempNode = tempNode.left;
+        }
+        tempNode.left = this.root.left;
+        tempNode.right = this.root.right;
+        this.root.left = null;
+        this.root.right = null;
+        this.root = null;
+        this.root = tempNode;
+    }
+
+    private void checkLeafeNodeDeletion(Node<T> tempNode, Node<T> father) {
+
+
+    }
+
+    private void checkMiddleNodeDeletion() {
+
+    }
+
 
     public int TreeToVine() {   // geht nicht
         Node<T> tail = this.root;
