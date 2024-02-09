@@ -1,4 +1,4 @@
-s# BinaryTree Functions implementation
+# BinaryTree Functions implementation
 
 #### Insert
 - **insert**: Iterative insertion of a new node.
