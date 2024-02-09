@@ -1,7 +1,5 @@
 import java.util.Stack;
 
-import javax.swing.tree.TreeNode;
-
 public class BinaryTree<T extends Comparable<T>> {
     private Node<T> root;
 
