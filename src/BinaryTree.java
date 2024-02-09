@@ -1,5 +1,7 @@
 import java.util.Stack;
 
+import javax.swing.tree.TreeNode;
+
 public class BinaryTree<T extends Comparable<T>> {
     private Node<T> root;
 
@@ -277,9 +279,12 @@ public class BinaryTree<T extends Comparable<T>> {
             this.root.right = this.root.left; 
             this.root.left = null;
         }
-        Node<T> tail = this.root;
-        Node<T> rest = tail.right;
-        Node<T> temp = this.root;
+
+        Node<T> virtualNode = new Node<>();
+        virtualNode.right = this.root;
+        Node<T> tail = virtualNode;
+        Node<T> rest = virtualNode.right;
+        Node<T> temp = virtualNode;
         int count = 0;
 
         if (temp.right.left == null) {
@@ -308,46 +313,66 @@ public class BinaryTree<T extends Comparable<T>> {
             }
         }
 
-        Node<T> changeNode = this.root;
-        this.root = this.root.right;
-        Node<T> iterate = this.root;
-        Node<T> iteratefather = null;
-        while (changeNode.getData().compareTo(iterate.getData()) > 0) {
-            iteratefather = iterate;
-            iterate = iterate.right;
-            if (iterate.right == null) {
-                iterate.right = changeNode;
-                changeNode.right = null;
-                changeNode.left = null;
-                return count;
-            } 
-        }
-        iteratefather.right = changeNode;
-        changeNode.right = null;
-        changeNode.right = iterate;
+        this.root = virtualNode.right;
+        virtualNode = null;
+
+        // used before
+        // Insert the head into the vine
+        // Node<T> changeNode = this.root;
+        // this.root = this.root.right;
+        // Node<T> iterate = this.root;
+        // Node<T> iteratefather = null;
+        // while (changeNode.getData().compareTo(iterate.getData()) > 0) {
+        //     iteratefather = iterate;
+        //     iterate = iterate.right;
+        //     if (iterate.right == null) {
+        //         iterate.right = changeNode;
+        //         changeNode.right = null;
+        //         changeNode.left = null;
+        //         return count;
+        //     } 
+        // }
+        // iteratefather.right = changeNode;
+        // changeNode.right = null;
+        // changeNode.right = iterate;
         return count;
     }
 
-    public void compress(int length) {
-        Node<T> tempNode = this.root;
-        for (int i = 0; i <= length; i++) {
+    public void compress(Node<T> dummyRoot, int size) {
+        Node<T> tempNode = dummyRoot;
+        for (int i = 0; i < size; i++) {
             Node<T> son = tempNode.right;
             tempNode.right = son.right;
             son.right = tempNode.right.left;
             tempNode.right.left = son;
             tempNode = tempNode.right;
         }
+        this.root = dummyRoot;
     }
 
-    public void VineToTree(int length) {
+    public void VineToTree(int size) {
         int k = 1;
-        while (k <= length + 1) k = k + k;
-        int i = k / 2 - 1;
-        compress(length - 1);
-        while (i < 1) {
-            i = i / 2;
-            compress(i);
+        int i = size;
+        Node<T> dummyRoot = new Node<>();
+        dummyRoot.right = this.root;
+
+        if (!isComplete(size)) {
+            while (k <= size + 1) k = 2 * k;
+            i = k / 2 - 1;
+            compress(dummyRoot, size - i);
         }
+
+        while (i > 1) {
+            i = i / 2;
+            compress(dummyRoot, i);
+        }
+        
+        this.root = dummyRoot.right;
+        dummyRoot.right = null;
+        dummyRoot = null;
     }
 
+    public boolean isComplete(int size) {
+        return ((size % 2) - 1) == 0;
+    }
 }
