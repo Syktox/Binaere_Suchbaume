@@ -27,6 +27,7 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+.idea
 
 BinaryTree.class
 Main.class
