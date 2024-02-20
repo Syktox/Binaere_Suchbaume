@@ -272,30 +272,12 @@ public class BinaryTree<T extends Comparable<T>> {
 
     public int TreeToVine() {   
         if (this.root == null) return -1;
-        if (this.root.left == null && this.root.right == null) return 1;
-        if (this.root.right == null) {
-            this.root.right = this.root.left; 
-            this.root.left = null;
-        }
 
         Node<T> virtualNode = new Node<>();
         virtualNode.right = this.root;
         Node<T> tail = virtualNode;
         Node<T> rest = virtualNode.right;
-        Node<T> temp = virtualNode;
         int count = 0;
-
-        if (temp.right.left == null) {
-            temp.right.left = tail.left;
-            this.root.left = null;
-        } else {
-            temp = temp.right;
-            while (temp.left != null) {
-                temp = temp.left;
-            }
-            temp.left = tail.left;
-            tail.left = null;
-        }
 
         while (rest != null) {
             if (rest.left == null) {
@@ -312,27 +294,8 @@ public class BinaryTree<T extends Comparable<T>> {
         }
 
         this.root = virtualNode.right;
+        virtualNode.right = null;
         virtualNode = null;
-
-        // used before
-        // Insert the head into the vine
-        // Node<T> changeNode = this.root;
-        // this.root = this.root.right;
-        // Node<T> iterate = this.root;
-        // Node<T> iteratefather = null;
-        // while (changeNode.getData().compareTo(iterate.getData()) > 0) {
-        //     iteratefather = iterate;
-        //     iterate = iterate.right;
-        //     if (iterate.right == null) {
-        //         iterate.right = changeNode;
-        //         changeNode.right = null;
-        //         changeNode.left = null;
-        //         return count;
-        //     } 
-        // }
-        // iteratefather.right = changeNode;
-        // changeNode.right = null;
-        // changeNode.right = iterate;
         return count;
     }
 
