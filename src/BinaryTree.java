@@ -312,6 +312,7 @@ public class BinaryTree<T extends Comparable<T>> {
     }
 
     public void VineToTree(int size) {
+        if (this.root == null) return;
         int k = 1;
         int i = size;
         Node<T> dummyRoot = new Node<>();
